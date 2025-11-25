@@ -30,6 +30,7 @@ export function Dashboard() {
     const { data, error } = await supabase
       .from('transactions')
       .select('*')
+      .eq('is_deleted', false)
       .order('transaction_date', { ascending: false })
       .order('created_at', { ascending: false });
 
@@ -68,6 +69,9 @@ export function Dashboard() {
 
     if (!error) {
       loadTransactions();
+      toast.success('Transaction deleted successfully!');
+    } else {
+      toast.error(error.message || 'Failed to delete transaction');
     }
   };
 
