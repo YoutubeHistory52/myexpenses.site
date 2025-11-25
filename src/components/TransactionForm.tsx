@@ -3,8 +3,7 @@ import { Transaction } from '../types';
 import { Plus } from 'lucide-react';
 
 interface TransactionFormProps {
-  onSubmit: (transaction: Omit<Transaction, 'id' | 'user_id' | 'created_at' | 'updated_at'>) => void;
-}
+  onSubmit: (transaction: Omit<Transaction, 'id' | 'user_id' | 'created_at' | 'updated_at' | 'is_deleted'>) => void;}
 
 const CATEGORIES = [
   'Salary',

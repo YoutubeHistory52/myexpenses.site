@@ -43,7 +43,7 @@ export function Dashboard() {
   const handleAddTransaction = async (
     transaction: Omit<
       Transaction,
-      'id' | 'user_id' | 'created_at' | 'updated_at'
+      'id' | 'user_id' | 'created_at' | 'updated_at' | 'is_deleted'
     >
   ) => {
     if (!user) return;

@@ -6,6 +6,7 @@ export interface Transaction {
   category: string;
   transaction_date: string;
   source: string;
+  type: 'debit' | 'credit';
   is_deleted: boolean;
   created_at: string;
   updated_at: string;
