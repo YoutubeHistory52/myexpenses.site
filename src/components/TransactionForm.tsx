@@ -37,6 +37,7 @@ export function TransactionForm({ onSubmit }: TransactionFormProps) {
 
     onSubmit({
       description,
+      type: type === 'expense' ? 'debit' : 'credit',
       amount: type === 'expense' ? -Math.abs(numAmount) : Math.abs(numAmount),
       category,
       transaction_date: transactionDate,

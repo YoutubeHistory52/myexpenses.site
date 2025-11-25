@@ -8,6 +8,7 @@ import { TransactionSummary } from './TransactionSummary';
 import { Analytics } from './Analytics';
 import { GmailIntegration } from './GmailIntegration';
 import { LogOut, Wallet, BarChart3, Mail } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 type Page = 'transactions' | 'analytics' | 'gmail';
 
@@ -53,6 +54,9 @@ export function Dashboard() {
 
     if (!error) {
       loadTransactions();
+            toast.success('Transaction added successfully!');
+    } else {
+      toast.error(error.message || 'Failed to add transaction');
     }
   };
 
