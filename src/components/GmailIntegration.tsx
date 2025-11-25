@@ -102,6 +102,7 @@ export function GmailIntegration({ onTransactionsAdded }: GmailIntegrationProps)
         category: 'Food',
         transaction_date: new Date(Date.now() - 86400000).toISOString().split('T')[0],
         source: 'Gmail',
+        type: 'debit',
       },
       {
         description: 'Salary Deposit',
@@ -109,6 +110,7 @@ export function GmailIntegration({ onTransactionsAdded }: GmailIntegrationProps)
         category: 'Salary',
         transaction_date: new Date(Date.now() - 172800000).toISOString().split('T')[0],
         source: 'Gmail',
+        type: 'credit',
       },
       {
         description: 'Uber ride',
@@ -116,6 +118,7 @@ export function GmailIntegration({ onTransactionsAdded }: GmailIntegrationProps)
         category: 'Transport',
         transaction_date: new Date(Date.now() - 259200000).toISOString().split('T')[0],
         source: 'Gmail',
+        type: 'debit',
       },
       {
         description: 'Netflix Subscription',
@@ -123,6 +126,7 @@ export function GmailIntegration({ onTransactionsAdded }: GmailIntegrationProps)
         category: 'Entertainment',
         transaction_date: new Date(Date.now() - 345600000).toISOString().split('T')[0],
         source: 'Gmail',
+        type: 'debit',
       },
       {
         description: 'Freelance Project',
@@ -130,6 +134,7 @@ export function GmailIntegration({ onTransactionsAdded }: GmailIntegrationProps)
         category: 'Freelance',
         transaction_date: new Date(Date.now() - 432000000).toISOString().split('T')[0],
         source: 'Gmail',
+        type: 'credit',
       },
     ];
 
@@ -247,18 +252,6 @@ export function GmailIntegration({ onTransactionsAdded }: GmailIntegrationProps)
               </>
             )}
           </button>
-        </div>
-
-        <div className="mt-8 pt-6 border-t border-gray-200">
-          <h3 className="font-semibold text-gray-900 mb-3">Supported Banks</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm text-gray-600">
-            <div>Bank of America</div>
-            <div>Chase</div>
-            <div>Wells Fargo</div>
-            <div>Citibank</div>
-            <div>PayPal</div>
-            <div>And more...</div>
-          </div>
         </div>
 
         <div className="mt-6 p-4 bg-gray-50 rounded-lg">
