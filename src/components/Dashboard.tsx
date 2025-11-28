@@ -138,7 +138,6 @@ export function Dashboard() {
             >
               <Mail className="w-5 h-5" />
               <span>Gmail</span>
-            </button>
           </nav>
         </div>
       </header>
