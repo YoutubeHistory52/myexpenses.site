@@ -128,18 +128,7 @@ export function Dashboard() {
               <BarChart3 className="w-5 h-5" />
               <span>Analytics</span>
             </button>
-            <button
-              onClick={() => setCurrentPage('gmail')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${
-                currentPage === 'gmail'
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-              }`}
-            >
-              <Mail className="w-5 h-5" />
-              <span>Gmail</span>
-            </button>
-          </nav>
+                      </nav>
         </div>
       </header>
 
