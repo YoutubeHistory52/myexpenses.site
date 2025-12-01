@@ -14,6 +14,7 @@
  * - authenticated: Shows Dashboard component
  */
 
+import { useState, useEffect } from 'react';
 import { useAuth } from './context/AuthContext';
 import { Auth } from './components/Auth';
 import { Dashboard } from './components/Dashboard';
@@ -29,9 +30,9 @@ function App() {
    * This happens when user clicks the verification link from their email
    */
     // When URL contains type=recovery, this is set to true to show verification screen
-  const [isVerifyingEmail, setIsVerifyingEmail] = React.useState(false);
+  const [isVerifyingEmail, setIsVerifyingEmail] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Check if this is an email verification callback
     const hash = window.location.hash;
     if (hash && hash.includes('type=recovery')) {
