@@ -2,9 +2,19 @@ import { useAuth } from './context/AuthContext';
 import { Auth } from './components/Auth';
 import { Dashboard } from './components/Dashboard';
 import { Toaster } from 'react-hot-toast';
+import { EmailVerification } from './components/EmailVerification';
 
 function App() {
   const { user, loading } = useAuth();
+  const [isVerifyingEmail, setIsVerifyingEmail] = React.useState(false);
+
+  React.useEffect(() => {
+    // Check if this is an email verification callback
+    const hash = window.location.hash;
+    if (hash && hash.includes('type=recovery')) {
+      setIsVerifyingEmail(true);
+    }
+  }, []);
 
   if (loading) {
     return (
@@ -19,7 +29,8 @@ function App() {
 
   return (
     <>
-      <Toaster position="top-center" />
+      if (isVerifyingEmail) return <EmailVerification />;
+    <Toaster position="top-center" />
       {user ? <Dashboard /> : <Auth />}
     </>
   );
