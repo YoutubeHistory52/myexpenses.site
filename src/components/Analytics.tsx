@@ -44,9 +44,9 @@ export function Analytics({ transactions }: { transactions: Transaction[] }) {
     .slice(0, 5);
 
   const formatAmount = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'INR',
       maximumFractionDigits: 0,
     }).format(amount);
   };

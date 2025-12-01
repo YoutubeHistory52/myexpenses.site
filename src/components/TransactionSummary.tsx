@@ -1,5 +1,5 @@
 import { Transaction } from '../types';
-import { TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
+import { TrendingUp, TrendingDown, IndianRupee } from 'lucide-react';
 
 interface TransactionSummaryProps {
   transactions: Transaction[];
@@ -19,7 +19,7 @@ export function TransactionSummary({ transactions }: TransactionSummaryProps) {
   const formatAmount = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'INR',
     }).format(amount);
   };
 
@@ -32,7 +32,7 @@ export function TransactionSummary({ transactions }: TransactionSummaryProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="bg-blue-600 p-2 rounded-lg">
-                <DollarSign className="w-5 h-5 text-white" />
+                <IndianRupee className="w-5 h-5 text-white" />
               </div>
               <span className="text-sm font-medium text-gray-700">Balance</span>
             </div>
