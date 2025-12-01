@@ -35,7 +35,7 @@ function App() {
   useEffect(() => {
     // Check if this is an email verification callback
     const hash = window.location.hash;
-    if (hash && hash.includes('type=recovery')) {
+    if (hash && hash.includes('code')) {
       setIsVerifyingEmail(true);
     }
   }, []);
@@ -51,10 +51,13 @@ function App() {
     );
   }
 
+  if (isVerifyingEmail) {
+    return <EmailVerification />;
+  }
+
   return (
     <>
-      if (isVerifyingEmail) return <EmailVerification />;
-    <Toaster position="top-center" />
+      <Toaster position="top-center" />
       {user ? <Dashboard /> : <Auth />}
     </>
   );
