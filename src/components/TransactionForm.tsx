@@ -1,33 +1,43 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Transaction } from '../types';
 import { Plus } from 'lucide-react';
 
 interface TransactionFormProps {
   onSubmit: (transaction: Omit<Transaction, 'id' | 'user_id' | 'created_at' | 'updated_at' | 'is_deleted'>) => void;}
 
-const CATEGORIES = [
-  'Salary',
-  'Freelance',
-  'Investment',
-  'Food',
-  'Transport',
-  'Shopping',
-  'Bills',
-  'Entertainment',
-  'Healthcare',
-  'Education',
-  'Other',
-];
-
+  const INCOME_CATEGORIES = [
+    'Salary',
+    'Freelance',
+    'Oth',
+  ];
+  
+  const EXPENSE_CATEGORIES = [
+    'Food & Drinks',
+    'Groceries',
+    'Transport',
+    'Shopping',
+    'Bills / Utilities',
+    'Entertainment',
+    'Health & Fitness',
+    'Savings / Investment',
+    'Education / Professional growth',
+    'Home',
+    'Other',
+  ];
+  
 export function TransactionForm({ onSubmit }: TransactionFormProps) {
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
-  const [category, setCategory] = useState('Food');
+  const [category, setCategory] = useState(EXPENSE_CATEGORIES[0]);
   const [transactionDate, setTransactionDate] = useState(
     new Date().toISOString().split('T')[0]
   );
   const [type, setType] = useState<'income' | 'expense'>('expense');
 
+
+  useEffect(() => {
+    setCategory(type === 'income' ? INCOME_CATEGORIES[0] : EXPENSE_CATEGORIES[0]);
+  }, [type]);
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -121,13 +131,15 @@ export function TransactionForm({ onSubmit }: TransactionFormProps) {
             id="category"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            required
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
           >
-            {CATEGORIES.map((cat) => (
-              <option key={cat} value={cat}>
+            {(type === 'income' ? INCOME_CATEGORIES : EXPENSE_CATEGORIES).map((cat) => (
+               <option key={cat} value={cat}>
                 {cat}
               </option>
-            ))}
+))}
+
           </select>
         </div>
 
