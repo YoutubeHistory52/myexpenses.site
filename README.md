@@ -1,4 +1,4 @@
-# Gmail Personal Finance Tracker
+#Personal Finance Tracker
 
 A web application that automatically tracks your personal finances by extracting transaction details from Gmail and organizing them into a comprehensive expense tracker.
 

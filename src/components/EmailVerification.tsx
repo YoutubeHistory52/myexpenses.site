@@ -1,8 +1,32 @@
-import React, { useEffect, useState } from 'react';
+/**
+ * Email Verification Component
+ * 
+ * Displays the email verification status page after user clicks the verification link.
+ * Handles three states:
+ * 1. Verifying - Shows loading spinner while checking verification status
+ * 2. Success - Shows success message with button to proceed to sign-in
+ * 3. Error - Shows error message with recovery option
+ * 
+ * The component automatically checks the user's session status on mount
+ * to determine if verification was successful. Once verified, user is
+ * redirected to the sign-in page by clicking the button.
+ */
+import { useEffect, useState } from 'react';
 import { CheckCircle, AlertCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 export function EmailVerification() {
+
+  // State: Tracks verification status (verifying, success, or error)
+    /**
+   * Effect: Verify email on component mount
+   * - Calls Supabase to get current user session
+   * - If session exists and user is authenticated, verification was successful
+   * - Updates UI state accordingly (success, error, or verifying)
+     // Redirect user to home (sign-in page) after email verification is complete
+  // Uses window.location.href for page navigation
+    */
+  // State: Stores error message to display to user if verification fails
   const [verificationStatus, setVerificationStatus] = useState<'verifying' | 'success' | 'error'>('verifying');
   const [errorMessage, setErrorMessage] = useState('');
 
