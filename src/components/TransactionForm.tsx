@@ -3,28 +3,29 @@ import { Transaction } from '../types';
 import { Plus } from 'lucide-react';
 
 interface TransactionFormProps {
-  onSubmit: (transaction: Omit<Transaction, 'id' | 'user_id' | 'created_at' | 'updated_at' | 'is_deleted'>) => void;}
+  onSubmit: (
+    transaction: Omit<
+      Transaction,
+      'id' | 'user_id' | 'created_at' | 'updated_at' | 'is_deleted'
+    >
+  ) => void;
+}
 
-  const INCOME_CATEGORIES = [
-    'Salary',
-    'Freelance',
-    'Oth',
-  ];
-  
-  const EXPENSE_CATEGORIES = [
-    'Food & Drinks',
-    'Groceries',
-    'Transport',
-    'Shopping',
-    'Bills / Utilities',
-    'Entertainment',
-    'Health & Fitness',
-    'Savings / Investment',
-    'Education / Professional growth',
-    'Home',
-    'Other',
-  ];
-  
+const INCOME_CATEGORIES = ['Salary', 'Freelance', 'Other'];
+const EXPENSE_CATEGORIES = [
+  'Food & Drinks',
+  'Groceries',
+  'Transport',
+  'Shopping',
+  'Bills / Utilities',
+  'Entertainment',
+  'Health & Fitness',
+  'Savings / Investment',
+  'Education / Professional growth',
+  'Home',
+  'Other',
+];
+
 export function TransactionForm({ onSubmit }: TransactionFormProps) {
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
@@ -34,10 +35,11 @@ export function TransactionForm({ onSubmit }: TransactionFormProps) {
   );
   const [type, setType] = useState<'income' | 'expense'>('expense');
 
-
+  // Reset category when type changes
   useEffect(() => {
     setCategory(type === 'income' ? INCOME_CATEGORIES[0] : EXPENSE_CATEGORIES[0]);
   }, [type]);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -53,16 +55,20 @@ export function TransactionForm({ onSubmit }: TransactionFormProps) {
       source: 'Manual',
     });
 
+    // Reset form
     setDescription('');
     setAmount('');
-    setCategory('Food');
+    setCategory(EXPENSE_CATEGORIES[0]); // correct reset
     setTransactionDate(new Date().toISOString().split('T')[0]);
+    setType('expense');
   };
 
   return (
     <div className="bg-white rounded-xl shadow-sm p-6">
       <h2 className="text-xl font-bold text-gray-900 mb-4">Add Transaction</h2>
+
       <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Type Toggle */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
           <div className="flex gap-2">
@@ -91,6 +97,7 @@ export function TransactionForm({ onSubmit }: TransactionFormProps) {
           </div>
         </div>
 
+        {/* Description */}
         <div>
           <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
             Description
@@ -106,6 +113,7 @@ export function TransactionForm({ onSubmit }: TransactionFormProps) {
           />
         </div>
 
+        {/* Amount */}
         <div>
           <label htmlFor="amount" className="block text-sm font-medium text-gray-700 mb-2">
             Amount
@@ -123,6 +131,7 @@ export function TransactionForm({ onSubmit }: TransactionFormProps) {
           />
         </div>
 
+        {/* Category */}
         <div>
           <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
             Category
@@ -135,14 +144,14 @@ export function TransactionForm({ onSubmit }: TransactionFormProps) {
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
           >
             {(type === 'income' ? INCOME_CATEGORIES : EXPENSE_CATEGORIES).map((cat) => (
-               <option key={cat} value={cat}>
+              <option key={cat} value={cat}>
                 {cat}
               </option>
-))}
-
+            ))}
           </select>
         </div>
 
+        {/* Date */}
         <div>
           <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-2">
             Date
@@ -157,6 +166,7 @@ export function TransactionForm({ onSubmit }: TransactionFormProps) {
           />
         </div>
 
+        {/* Submit */}
         <button
           type="submit"
           className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition flex items-center justify-center gap-2"

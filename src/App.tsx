@@ -1,43 +1,63 @@
-/**
- * Main App Component - Expense Tracker Application
- * 
- * This component serves as the main entry point for the application.
- * It handles:
- * - User authentication state management
- * - Conditional rendering based on auth status
- * - Email verification callback detection and handling
- * - Navigation between Auth, Email Verification, and Dashboard views
- * 
- * Routes:
- * - /: Shows Auth component for login/signup
- * - /#type=recovery: Shows EmailVerification component
- * - authenticated: Shows Dashboard component
- */
-
 import { useState, useEffect } from 'react';
 import { useAuth } from './context/AuthContext';
 import { Auth } from './components/Auth';
 import { Dashboard } from './components/Dashboard';
 import { Toaster } from 'react-hot-toast';
+import { ForgotPassword } from './components/ForgotPassword';
 import { EmailVerification } from './components/EmailVerification';
+import { ResetPassword } from './components/ResetPassword';
 
 function App() {
-  const { user, loading } = useAuth();
-    // State to track if email verification callback is being processed
-    /**
-   * Effect: Detect email verification callback
-   * Runs once on component mount to check if the URL contains the email verification token
-   * This happens when user clicks the verification link from their email
-   */
-    // When URL contains type=recovery, this is set to true to show verification screen
+  const { loading, user } = useAuth();
+
+  const getCurrentRoute = () => {
+    // first check pathname (supports path-based redirects like /reset-password)
+    const path = window.location.pathname;
+    if (path === '/reset-password') return '#/reset-password'; // normalize to your existing checks
+    if (path === '/email-verification') return '#/email-verification';
+
+    // fallback: check hash (legacy)
+    const hash = window.location.hash || '';
+    if (hash) return hash;
+
+    // also consider query params (supabase might return token & type as query on the hosted verify endpoint,
+    // and then the redirect_to may come without hash; we already cover path above)
+    return '';
+  };
+
+  const [currentRoute, setCurrentRoute] = useState<string>(getCurrentRoute());
   const [isVerifyingEmail, setIsVerifyingEmail] = useState(false);
 
   useEffect(() => {
-    // Check if this is an email verification callback
-    const hash = window.location.hash;
-    if (hash && hash.includes('code')) {
-      setIsVerifyingEmail(true);
+    // On first load, detect Supabase callback (the hosted verify link contains type=... and/or code)
+    const href = window.location.href;
+    // If Supabase appended something like ?type=recovery or ?type=signup&token=..., check for it:
+    if (href.includes('type=') || href.includes('access_token') || href.includes('token=')) {
+      // If the URL also contains path /reset-password or /email-verification, that will be handled by routing below.
+      // For hosted verify flow, we may need to show EmailVerification.
+      if (href.includes('type=signup') || href.includes('type=verify') || href.includes('type=magiclink')) {
+        setIsVerifyingEmail(true);
+      }
+      if (href.includes('type=recovery')) {
+        // If recovery type came directly to your origin (i.e. supabase used hosted verify then redirected to /),
+        // the best path is to show ResetPassword if possible.
+        // We'll let routing logic below show ResetPassword if the path is /reset-password.
+      }
     }
+
+    // set initial route normalized
+    setCurrentRoute(getCurrentRoute());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const onLocationChange = () => setCurrentRoute(getCurrentRoute());
+    window.addEventListener('popstate', onLocationChange);
+    window.addEventListener('hashchange', onLocationChange);
+    return () => {
+      window.removeEventListener('popstate', onLocationChange);
+      window.removeEventListener('hashchange', onLocationChange);
+    };
   }, []);
 
   if (loading) {
@@ -58,7 +78,16 @@ function App() {
   return (
     <>
       <Toaster position="top-center" />
-      {user ? <Dashboard /> : <Auth />}
+
+      {currentRoute === '#/forgot-password' ? (
+        <ForgotPassword onBack={() => (window.location.hash = '')} />
+      ) : currentRoute === '#/reset-password' ? (
+        <ResetPassword />
+      ) : user ? (
+        <Dashboard />
+      ) : (
+        <Auth />
+      )}
     </>
   );
 }
