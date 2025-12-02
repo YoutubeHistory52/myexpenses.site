@@ -1,43 +1,33 @@
-/**
- * Main App Component - Expense Tracker Application
- * 
- * This component serves as the main entry point for the application.
- * It handles:
- * - User authentication state management
- * - Conditional rendering based on auth status
- * - Email verification callback detection and handling
- * - Navigation between Auth, Email Verification, and Dashboard views
- * 
- * Routes:
- * - /: Shows Auth component for login/signup
- * - /#type=recovery: Shows EmailVerification component
- * - authenticated: Shows Dashboard component
- */
-
 import { useState, useEffect } from 'react';
 import { useAuth } from './context/AuthContext';
 import { Auth } from './components/Auth';
 import { Dashboard } from './components/Dashboard';
 import { Toaster } from 'react-hot-toast';
+import { ForgotPassword } from './components/ForgotPassword';
 import { EmailVerification } from './components/EmailVerification';
+import { ResetPassword } from './components/ResetPassword';
 
 function App() {
-  const { user, loading } = useAuth();
-    // State to track if email verification callback is being processed
-    /**
-   * Effect: Detect email verification callback
-   * Runs once on component mount to check if the URL contains the email verification token
-   * This happens when user clicks the verification link from their email
-   */
-    // When URL contains type=recovery, this is set to true to show verification screen
-  const [isVerifyingEmail, setIsVerifyingEmail] = useState(false);
+  const { loading, user } = useAuth();
 
+  const [isVerifyingEmail, setIsVerifyingEmail] = useState(false);
+  const [currentHash, setCurrentHash] = useState<string>(window.location.hash);
+
+  // Detect verification callback on first load
   useEffect(() => {
-    // Check if this is an email verification callback
-    const hash = window.location.hash;
-    if (hash && hash.includes('code')) {
+    if (window.location.hash.includes('code')) {
       setIsVerifyingEmail(true);
     }
+  }, []);
+
+  // Listen for hash changes (forgot/reset navigation)
+  useEffect(() => {
+    const handleHashChange = () => {
+      setCurrentHash(window.location.hash);
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
   if (loading) {
@@ -58,7 +48,16 @@ function App() {
   return (
     <>
       <Toaster position="top-center" />
-      {user ? <Dashboard /> : <Auth />}
+
+      {currentHash === '#/forgot-password' ? (
+        <ForgotPassword onBack={() => (window.location.hash = '')} />
+      ) : currentHash === '#/reset-password' ? (
+        <ResetPassword />
+      ) : user ? (
+        <Dashboard />
+      ) : (
+        <Auth />
+      )}
     </>
   );
 }

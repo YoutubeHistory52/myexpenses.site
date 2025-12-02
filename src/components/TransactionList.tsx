@@ -6,10 +6,7 @@ interface TransactionListProps {
   onDelete: (id: string) => void;
 }
 
-export function TransactionList({
-  transactions,
-  onDelete,
-}: TransactionListProps) {
+export function TransactionList({ transactions, onDelete }: TransactionListProps) {
   if (transactions.length === 0) {
     return (
       <div className="text-center py-12">
@@ -31,7 +28,7 @@ export function TransactionList({
   };
 
   const formatAmount = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',
     }).format(Math.abs(amount));
@@ -50,17 +47,20 @@ export function TransactionList({
                 <h3 className="font-medium text-gray-900 truncate">
                   {transaction.description}
                 </h3>
+
                 <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
                   <span className="flex items-center gap-1">
                     <Tag className="w-4 h-4" />
                     {transaction.category}
                   </span>
+
                   <span className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
                     {formatDate(transaction.transaction_date)}
                   </span>
                 </div>
               </div>
+
               <div className="flex items-center gap-3">
                 <span
                   className={`text-lg font-bold ${
@@ -70,6 +70,7 @@ export function TransactionList({
                   {transaction.amount >= 0 ? '+' : '-'}
                   {formatAmount(transaction.amount)}
                 </span>
+
                 <button
                   onClick={() => onDelete(transaction.id)}
                   className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
@@ -78,6 +79,7 @@ export function TransactionList({
                   <Trash2 className="w-5 h-5" />
                 </button>
               </div>
+
             </div>
           </div>
         </div>

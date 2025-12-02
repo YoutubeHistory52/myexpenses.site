@@ -7,7 +7,7 @@ import { TransactionList } from './TransactionList';
 import { TransactionSummary } from './TransactionSummary';
 import { Analytics } from './Analytics';
 import { GmailIntegration } from './GmailIntegration';
-import { LogOut, Wallet, BarChart3, Mail } from 'lucide-react';
+import { LogOut, Wallet, BarChart3 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 type Page = 'transactions' | 'analytics' | 'gmail';
@@ -22,7 +22,10 @@ export function Dashboard() {
   useEffect(() => {
     if (user) {
       loadTransactions();
+    } else {
+      setTransactions([]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const loadTransactions = async () => {
@@ -35,8 +38,11 @@ export function Dashboard() {
       .order('created_at', { ascending: false });
 
     if (!error && data) {
-      setTransactions(data);
+      setTransactions(data as Transaction[]);
+    } else if (error) {
+      toast.error(error.message || 'Failed to load transactions');
     }
+
     setLoading(false);
   };
 
@@ -54,8 +60,8 @@ export function Dashboard() {
     });
 
     if (!error) {
-      loadTransactions();
-            toast.success('Transaction added successfully!');
+      await loadTransactions();
+      toast.success('Transaction added successfully!');
     } else {
       toast.error(error.message || 'Failed to add transaction');
     }
@@ -68,7 +74,7 @@ export function Dashboard() {
       .eq('id', id);
 
     if (!error) {
-      loadTransactions();
+      await loadTransactions();
       toast.success('Transaction deleted successfully!');
     } else {
       toast.error(error.message || 'Failed to delete transaction');
@@ -97,6 +103,7 @@ export function Dashboard() {
                 <p className="text-sm text-gray-600">{user?.email}</p>
               </div>
             </div>
+
             <button
               onClick={signOut}
               className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition"
@@ -105,6 +112,7 @@ export function Dashboard() {
               <span className="hidden sm:inline">Sign Out</span>
             </button>
           </div>
+
           <nav className="flex gap-2 border-t border-gray-200 pt-4 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
             <button
               onClick={() => setCurrentPage('transactions')}
@@ -117,6 +125,7 @@ export function Dashboard() {
               <Wallet className="w-5 h-5" />
               <span>Transactions</span>
             </button>
+
             <button
               onClick={() => setCurrentPage('analytics')}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition ${
@@ -128,7 +137,9 @@ export function Dashboard() {
               <BarChart3 className="w-5 h-5" />
               <span>Analytics</span>
             </button>
-                      </nav>
+
+            {/* Gmail integration button intentionally hidden until integration is stable */}
+          </nav>
         </div>
       </header>
 
@@ -143,9 +154,7 @@ export function Dashboard() {
             <div className="lg:col-span-2">
               <div className="bg-white rounded-xl shadow-sm p-6">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-                  <h2 className="text-xl font-bold text-gray-900">
-                    Transactions
-                  </h2>
+                  <h2 className="text-xl font-bold text-gray-900">Transactions</h2>
                   <div className="flex gap-2">
                     <button
                       onClick={() => setFilter('all')}
@@ -181,9 +190,7 @@ export function Dashboard() {
                 </div>
 
                 {loading ? (
-                  <div className="text-center py-12 text-gray-500">
-                    Loading transactions...
-                  </div>
+                  <div className="text-center py-12 text-gray-500">Loading transactions...</div>
                 ) : (
                   <TransactionList
                     transactions={filteredTransactions}
@@ -195,9 +202,7 @@ export function Dashboard() {
           </div>
         )}
 
-        {currentPage === 'analytics' && (
-          <Analytics transactions={transactions} />
-        )}
+        {currentPage === 'analytics' && <Analytics transactions={transactions} />}
 
         {currentPage === 'gmail' && (
           <GmailIntegration onTransactionsAdded={loadTransactions} />
