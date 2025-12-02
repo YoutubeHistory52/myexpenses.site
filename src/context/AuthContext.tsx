@@ -49,7 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         password,
         options: {
           // This is where Supabase sends user after clicking
-          emailRedirectTo: `${window.location.origin}/#/email-verification`,
+          emailRedirectTo: `${window.location.origin}/email-verification`,
         },
       });
 
